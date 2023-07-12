@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_hsvcolor_picker/flutter_hsvcolor_picker.dart';
 
 class HexPickerPage extends StatefulWidget {
@@ -39,6 +38,7 @@ class _HexPickerPageState extends State<HexPickerPage> {
                 ///---------------------------------
                 HexPicker(
                   color: color,
+                  placeholderText: 'Hex Code',
                   onChanged: (value) => super.setState(
                     () => onChanged(value),
                   ),
