@@ -5,6 +5,7 @@ class HexPicker extends StatefulWidget {
   HexPicker({
     required this.color,
     required this.onChanged,
+    required this.placeholderText,
     Key? key,
   })  : _controller = TextEditingController(
           text: _Hex.colorToString(color).toUpperCase(),
@@ -14,6 +15,7 @@ class HexPicker extends StatefulWidget {
   final Color color;
   final ValueChanged<Color> onChanged;
   final TextEditingController _controller;
+  final String placeholderText;
 
   @override
   _HexPickerState createState() => _HexPickerState();
@@ -44,20 +46,18 @@ class _HexPickerState extends State<HexPicker> {
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Text(
             '#',
-            style:
-                Theme.of(context).textTheme.headline6?.copyWith(fontSize: 18),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18),
           ),
         ),
 
         // TextField
         Expanded(
           child: TextField(
-            style:
-                Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 20),
             focusNode: FocusNode()..addListener(() {}),
             controller: widget._controller,
             onSubmitted: textOnSubmitted,
-            decoration: const InputDecoration.collapsed(hintText: 'hex code'),
+            decoration: InputDecoration.collapsed(hintText: widget.placeholderText),
           ),
         )
       ],
@@ -88,8 +88,7 @@ class _Hex {
       _colorToString(
         color.blue.toRadixString(16),
       );
-  static String _colorToString(String text) =>
-      text.length == 1 ? '0$text' : text;
+  static String _colorToString(String text) => text.length == 1 ? '0$text' : text;
 
   // Subste
   static String? textSubString(String? text) {

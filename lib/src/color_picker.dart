@@ -36,6 +36,12 @@ enum PickerOrientation {
 class ColorPicker extends StatefulWidget {
   const ColorPicker({
     required this.onChanged,
+    this.paletteHueText = 'Palette Hue',
+    this.paletteValueText = 'Palette Value',
+    this.paletteSaturationText = 'Palette Saturation',
+    this.swatchesText = 'Swatches',
+    this.wheelText = 'Wheel',
+    this.placeholderText = 'Hex Code',
     this.color = Colors.blue,
     this.selectedTextColor = Colors.white,
     this.textColor = Colors.white,
@@ -51,6 +57,13 @@ class ColorPicker extends StatefulWidget {
   final Color selectedTextColor;
   final Color textColor;
   final Color dropdownBgColor;
+
+  final String swatchesText;
+  final String wheelText;
+  final String paletteHueText;
+  final String paletteValueText;
+  final String placeholderText;
+  final String paletteSaturationText;
 
   /// The first picker widget that is shown.
   ///
@@ -111,7 +124,7 @@ class _ColorPickerState extends State<ColorPicker> {
     _pickers = <_IPicker>[
       // SwatchesPicker
       _IPicker(
-        name: 'Swatches',
+        name: widget.swatchesText, //'Swatches'
         picker: Picker.swatches,
         builder: (BuildContext context) => SwatchesPicker(
           onChanged: (Color value) => super.setState(
@@ -146,7 +159,7 @@ class _ColorPickerState extends State<ColorPicker> {
 
       // WheelPicker
       _IPicker(
-        name: 'Wheel',
+        name: widget.wheelText, //'Wheel',
         picker: Picker.wheel,
         builder: (BuildContext context) => WheelPicker(
           color: _hSVColor,
@@ -158,7 +171,7 @@ class _ColorPickerState extends State<ColorPicker> {
 
       // PaletteHuePicker
       _IPicker(
-        name: 'Palette Hue',
+        name: widget.paletteHueText, //'Palette Hue'
         picker: Picker.paletteHue,
         builder: (BuildContext context) => PaletteHuePicker(
           color: _hSVColor,
@@ -170,7 +183,7 @@ class _ColorPickerState extends State<ColorPicker> {
 
       // PaletteSaturationPicker
       _IPicker(
-        name: 'Palette Saturation',
+        name: widget.paletteSaturationText, //'Palette Saturation'
         picker: Picker.paletteSaturation,
         builder: (BuildContext context) => PaletteSaturationPicker(
           color: _hSVColor,
@@ -182,7 +195,7 @@ class _ColorPickerState extends State<ColorPicker> {
 
       // PaletteValuePicker
       _IPicker(
-        name: 'Palette Value',
+        name: widget.paletteValueText, //'Palette Value'
         picker: Picker.paletteValue,
         builder: (BuildContext context) => PaletteValuePicker(
           color: _hSVColor,
@@ -249,6 +262,7 @@ class _ColorPickerState extends State<ColorPicker> {
           Expanded(
             child: HexPicker(
               color: _color,
+              placeholderText: widget.placeholderText,
               onChanged: (Color value) => super.setState(
                 () => _colorOnChanged(value),
               ),
