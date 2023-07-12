@@ -7,7 +7,6 @@ import 'pickers/palette_value_picker.dart';
 import 'pickers/rgb_picker.dart';
 import 'pickers/swatches_picker.dart';
 import 'pickers/wheel_picker.dart';
-import 'widgets/alpha_picker.dart';
 import 'widgets/hex_picker.dart';
 
 enum Picker {
@@ -38,6 +37,9 @@ class ColorPicker extends StatefulWidget {
   const ColorPicker({
     required this.onChanged,
     this.color = Colors.blue,
+    this.selectedTextColor = Colors.white,
+    this.textColor = Colors.white,
+    this.dropdownBgColor = Colors.grey,
     this.initialPicker = Picker.paletteHue,
     this.pickerOrientation = PickerOrientation.inherit,
     Key? key,
@@ -45,6 +47,10 @@ class ColorPicker extends StatefulWidget {
 
   final ValueChanged<Color> onChanged;
   final Color color;
+
+  final Color selectedTextColor;
+  final Color textColor;
+  final Color dropdownBgColor;
 
   /// The first picker widget that is shown.
   ///
@@ -63,15 +69,10 @@ class _ColorPickerState extends State<ColorPicker> {
   _ColorPickerState();
 
   // Color
-  late int _alpha;
   late Color _color;
   late HSVColor _hSVColor;
   late List<_IPicker> _pickers;
   late int _index;
-
-  void _alphaOnChanged(int value) {
-    _updateColor(_color.withAlpha(value));
-  }
 
   void _colorOnChanged(Color value) {
     _updateColor(value.withAlpha(_color.alpha));
@@ -86,7 +87,6 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 
   void _updateColor(Color color) {
-    _alpha = color.alpha;
     _color = color;
     _hSVColor = HSVColor.fromColor(color);
     widget.onChanged(color);
@@ -105,7 +105,6 @@ class _ColorPickerState extends State<ColorPicker> {
     super.initState();
 
     _color = widget.color;
-    _alpha = _color.alpha;
     _hSVColor = HSVColor.fromColor(_color);
 
     // Pickers
@@ -208,11 +207,14 @@ class _ColorPickerState extends State<ColorPicker> {
         child: Text(
           item.name,
           style: _index == _pickers.indexOf(item)
-              ? Theme.of(context).textTheme.headline5?.copyWith(
+              ? Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontSize: 18,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: widget.selectedTextColor,
                   )
-              : Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18),
+              : Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontSize: 18,
+                    color: widget.textColor,
+                  ),
         ),
       ),
     );
@@ -272,7 +274,10 @@ class _ColorPickerState extends State<ColorPicker> {
           iconSize: 32.0,
           isExpanded: true,
           isDense: true,
-          style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20),
+          dropdownColor: widget.dropdownBgColor,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontSize: 20,
+              ),
           value: _pickers[_index],
           onChanged: (_IPicker? value) => super.setState(
             () => _pickerOnChanged(value),
@@ -295,7 +300,10 @@ class _ColorPickerState extends State<ColorPicker> {
         iconSize: 32.0,
         isExpanded: true,
         isDense: true,
-        style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20),
+        dropdownColor: widget.dropdownBgColor,
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontSize: 20,
+            ),
         value: _pickers[_index],
         onChanged: (_IPicker? value) => super.setState(
           () => _pickerOnChanged(value),
@@ -309,15 +317,6 @@ class _ColorPickerState extends State<ColorPicker> {
   Widget _buildBody() {
     return SizedBox(
       child: _pickers[_index].builder(context),
-    );
-  }
-
-  Widget _buildAlphaPicker() {
-    return AlphaPicker(
-      alpha: _alpha,
-      onChanged: (int value) => super.setState(
-        () => _alphaOnChanged(value),
-      ),
     );
   }
 
@@ -344,7 +343,6 @@ class _ColorPickerState extends State<ColorPicker> {
             _buildHead(),
             _buildDropdownPortraitMode(),
             _buildBody(),
-            _buildAlphaPicker(),
           ],
         );
 
@@ -358,7 +356,6 @@ class _ColorPickerState extends State<ColorPicker> {
                 children: <Widget>[
                   _buildHead(),
                   _buildDropdownLandscapeMode(),
-                  _buildAlphaPicker(),
                 ],
               ),
             ),
